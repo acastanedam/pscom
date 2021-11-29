@@ -9,16 +9,20 @@
  * file.
  */
 
+#include <stddef.h>
+extern void *(*__morecore)(ptrdiff_t __size);
+extern void *__default_morecore(ptrdiff_t __size) __THROW __attribute_malloc__;
+
 #ifndef _SHMMALLOC_H_
 #define _SHMMALLOC_H_
 
 struct Psshm {
-	void *base; /* base pointer of shared mem segment */
-	void *end;  /* = base + size */
-	void *tail;
-	size_t size;
-	int shmid; /* shmid of shared mem segment at base */
-	const char *msg; /* Message if initialization failed */
+        void *base; /* base pointer of shared mem segment */
+        void *end;  /* = base + size */
+        void *tail;
+        size_t size;
+        int shmid; /* shmid of shared mem segment at base */
+        const char *msg; /* Message if initialization failed */
 };
 
 /* Get the Psshm of the shared memory. */
@@ -29,7 +33,7 @@ extern struct Psshm psshm_info;
 static inline
 int is_psshm_ptr(void *ptr)
 {
-	return (ptr < psshm_info.end) && (psshm_info.base <= ptr);
+        return (ptr < psshm_info.end) && (psshm_info.base <= ptr);
 }
 
 
@@ -37,7 +41,7 @@ int is_psshm_ptr(void *ptr)
 static inline
 int is_psshm_enabled()
 {
-	return !!psshm_info.base;
+        return !!psshm_info.base;
 }
 
 
@@ -50,7 +54,6 @@ int is_psshm_enabled()
    (See libpsmalloc.so)
  */
 void psshm_init();
-
 
 /*
 # always overcommit, never check

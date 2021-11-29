@@ -18,6 +18,8 @@ add_library(
 target_include_directories(
   pscom4ofed
   PRIVATE ${IBVERBS_INCLUDE_DIRS}
+  PUBLIC  ${PROJECT_SOURCE_DIR}/include
+  PRIVATE ${PROJECT_BINARY_DIR}/include
 )
 
 target_link_libraries(

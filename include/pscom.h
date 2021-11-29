@@ -31,7 +31,6 @@ extern "C" {
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-
 #ifndef PSCOM_CUDA_AWARENESS
 #define PSCOM_VERSION 0x0300
 #else
@@ -49,15 +48,15 @@ extern "C" {
  * additionally.
  */
 typedef enum PSCOM_err {
-	PSCOM_SUCCESS = 0,                  /**< Success */
-	PSCOM_ERR_STDERROR = -1,            /**< Standard error, see errno */
-	PSCOM_ERR_INVALID = -2,             /**< Invalid argument */
-	PSCOM_ERR_ALREADY = -3,             /**< Operation already in progress */
-	PSCOM_NOT_IMPLEMENTED = -4,         /**< Function not implemented */
-	PSCOM_ERR_EOF = -5,                 /**< End of file */
-	PSCOM_ERR_IOERROR = -6,             /**< IO Error */
-	PSCOM_ERR_UNSUPPORTED_VERSION = -7, /**< Unsupported version */
-	PSCOM_ERR_CONNECTION_REFUSED = -8,  /**< Connection refused */
+        PSCOM_SUCCESS = 0,                  /**< Success */
+        PSCOM_ERR_STDERROR = -1,            /**< Standard error, see errno */
+        PSCOM_ERR_INVALID = -2,             /**< Invalid argument */
+        PSCOM_ERR_ALREADY = -3,             /**< Operation already in progress */
+        PSCOM_NOT_IMPLEMENTED = -4,         /**< Function not implemented */
+        PSCOM_ERR_EOF = -5,                 /**< End of file */
+        PSCOM_ERR_IOERROR = -6,             /**< IO Error */
+        PSCOM_ERR_UNSUPPORTED_VERSION = -7, /**< Unsupported version */
+        PSCOM_ERR_CONNECTION_REFUSED = -8,  /**< Connection refused */
 } pscom_err_t;
 
 
@@ -65,21 +64,21 @@ typedef enum PSCOM_err {
  * @brief Connection states.
  */
 typedef enum PSCOM_con_state {
-	PSCOM_CON_STATE_NO_RW			= 0x0,   /**< Neither open for reading or writing */
-	PSCOM_CON_STATE_R			= 0x1,   /**< Open for reading */
-	PSCOM_CON_STATE_W			= 0x2,   /**< Open for writing */
-	PSCOM_CON_STATE_RW			= 0x3,   /**< Open for reading and writing */
-	PSCOM_CON_STATE_CLOSED			= 0x4,   /**< Closed */
-	PSCOM_CON_STATE_CONNECTING		= 0x8,   /**< Connection setup in progress via precon (active) */
-	PSCOM_CON_STATE_ACCEPTING		= 0x10,	 /**< Connection setup in progress via precon (passive) */
-	PSCOM_CON_STATE_CLOSE_WAIT		= 0x400, /**< EOF sent; waiting for EOF from peer */
-	PSCOM_CON_STATE_CLOSING			= 0x20,  /**< Send EOF */
-	PSCOM_CON_STATE_SUSPENDING		= 0x40,  /**< Send PSCOM_MSGTYPE_SUSPEND */
-	PSCOM_CON_STATE_SUSPEND_SENT		= PSCOM_CON_STATE_SUSPENDING | 0x080, /**< PSCOM_MSGTYPE_SUSPEND sent; wait for a PSCOM_MSGTYPE_SUSPEND from peer */
-	PSCOM_CON_STATE_SUSPEND_RECEIVED	= PSCOM_CON_STATE_SUSPENDING | 0x100, /**< Received a PSCOM_MSGTYPE_SUSPEND from peer*/
-	PSCOM_CON_STATE_SUSPENDED		= PSCOM_CON_STATE_SUSPENDING | PSCOM_CON_STATE_SUSPEND_SENT | PSCOM_CON_STATE_SUSPEND_RECEIVED, /**< Suspend complete */
-	PSCOM_CON_STATE_CONNECTING_ONDEMAND	= 0x200 | PSCOM_CON_STATE_CONNECTING, /**< Connection setup in progress via precon/ondemand (active) */
-	PSCOM_CON_STATE_ACCEPTING_ONDEMAND	= 0x200 | PSCOM_CON_STATE_ACCEPTING, /**< Connection setup in progress via precon/ondemand (passive) */
+        PSCOM_CON_STATE_NO_RW                   = 0x0,   /**< Neither open for reading or writing */
+        PSCOM_CON_STATE_R                       = 0x1,   /**< Open for reading */
+        PSCOM_CON_STATE_W                       = 0x2,   /**< Open for writing */
+        PSCOM_CON_STATE_RW                      = 0x3,   /**< Open for reading and writing */
+        PSCOM_CON_STATE_CLOSED                  = 0x4,   /**< Closed */
+        PSCOM_CON_STATE_CONNECTING              = 0x8,   /**< Connection setup in progress via precon (active) */
+        PSCOM_CON_STATE_ACCEPTING               = 0x10,  /**< Connection setup in progress via precon (passive) */
+        PSCOM_CON_STATE_CLOSE_WAIT              = 0x400, /**< EOF sent; waiting for EOF from peer */
+        PSCOM_CON_STATE_CLOSING                 = 0x20,  /**< Send EOF */
+        PSCOM_CON_STATE_SUSPENDING              = 0x40,  /**< Send PSCOM_MSGTYPE_SUSPEND */
+        PSCOM_CON_STATE_SUSPEND_SENT            = PSCOM_CON_STATE_SUSPENDING | 0x080, /**< PSCOM_MSGTYPE_SUSPEND sent; wait for a PSCOM_MSGTYPE_SUSPEND from peer */
+        PSCOM_CON_STATE_SUSPEND_RECEIVED        = PSCOM_CON_STATE_SUSPENDING | 0x100, /**< Received a PSCOM_MSGTYPE_SUSPEND from peer*/
+        PSCOM_CON_STATE_SUSPENDED               = PSCOM_CON_STATE_SUSPENDING | PSCOM_CON_STATE_SUSPEND_SENT | PSCOM_CON_STATE_SUSPEND_RECEIVED, /**< Suspend complete */
+        PSCOM_CON_STATE_CONNECTING_ONDEMAND     = 0x200 | PSCOM_CON_STATE_CONNECTING, /**< Connection setup in progress via precon/ondemand (active) */
+        PSCOM_CON_STATE_ACCEPTING_ONDEMAND      = 0x200 | PSCOM_CON_STATE_ACCEPTING, /**< Connection setup in progress via precon/ondemand (passive) */
 } pscom_con_state_t;
 
 
@@ -87,26 +86,26 @@ typedef enum PSCOM_con_state {
  * @brief Connection types.
  */
 typedef enum PSCOM_con_type {
-	PSCOM_CON_TYPE_NONE	= 0x00, /**< Initial generic connection */
-	PSCOM_CON_TYPE_LOOP	= 0x01, /**< Loopback connection */
-	PSCOM_CON_TYPE_TCP	= 0x02, /**< TCP communication */
-	PSCOM_CON_TYPE_SHM	= 0x03, /**< Shared memory communication */
-	PSCOM_CON_TYPE_P4S	= 0x04, /**< Optimized socket interface */
-	PSCOM_CON_TYPE_GM	= 0x05, /**< Myrinet communication */
-	PSCOM_CON_TYPE_MVAPI	= 0x06, /**< @deprecated */
-	PSCOM_CON_TYPE_OPENIB	= 0x07, /**< InfiniBand communication via verbs */
-	PSCOM_CON_TYPE_ELAN	= 0x08, /**< ELAN communication */
-	PSCOM_CON_TYPE_DAPL	= 0x09, /**< DAPL communication (e.g., via IB) */
-	PSCOM_CON_TYPE_ONDEMAND	= 0x0a, /**< Pseudo connection for on-demand connection establishment */
-	PSCOM_CON_TYPE_OFED	= 0x0b, /**< Alternative IB communication via verbs */
-	PSCOM_CON_TYPE_EXTOLL	= 0x0c, /**< EXTOLL communication */
-	PSCOM_CON_TYPE_PSM      = 0x0d, /**< PSM communication (e.g., for OmniPath) */
-	PSCOM_CON_TYPE_VELO	= 0x0e, /**< Alternative EXTOLL communication */
-	PSCOM_CON_TYPE_CBC      = 0x0f, /**< @deprecated */
-	PSCOM_CON_TYPE_MXM      = 0x10, /**< MXM communication (Mellanox InfiniBand) */
-	PSCOM_CON_TYPE_SUSPENDED= 0x11, /**< A suspended connection */
-	PSCOM_CON_TYPE_UCP      = 0x12, /**< UCP communication (e.g., for InfiniBand) */
-	PSCOM_CON_TYPE_GW	= 0x13, /**< Communication via a gateway node */
+        PSCOM_CON_TYPE_NONE     = 0x00, /**< Initial generic connection */
+        PSCOM_CON_TYPE_LOOP     = 0x01, /**< Loopback connection */
+        PSCOM_CON_TYPE_TCP      = 0x02, /**< TCP communication */
+        PSCOM_CON_TYPE_SHM      = 0x03, /**< Shared memory communication */
+        PSCOM_CON_TYPE_P4S      = 0x04, /**< Optimized socket interface */
+        PSCOM_CON_TYPE_GM       = 0x05, /**< Myrinet communication */
+        PSCOM_CON_TYPE_MVAPI    = 0x06, /**< @deprecated */
+        PSCOM_CON_TYPE_OPENIB   = 0x07, /**< InfiniBand communication via verbs */
+        PSCOM_CON_TYPE_ELAN     = 0x08, /**< ELAN communication */
+        PSCOM_CON_TYPE_DAPL     = 0x09, /**< DAPL communication (e.g., via IB) */
+        PSCOM_CON_TYPE_ONDEMAND = 0x0a, /**< Pseudo connection for on-demand connection establishment */
+        PSCOM_CON_TYPE_OFED     = 0x0b, /**< Alternative IB communication via verbs */
+        PSCOM_CON_TYPE_EXTOLL   = 0x0c, /**< EXTOLL communication */
+        PSCOM_CON_TYPE_PSM      = 0x0d, /**< PSM communication (e.g., for OmniPath) */
+        PSCOM_CON_TYPE_VELO     = 0x0e, /**< Alternative EXTOLL communication */
+        PSCOM_CON_TYPE_CBC      = 0x0f, /**< @deprecated */
+        PSCOM_CON_TYPE_MXM      = 0x10, /**< MXM communication (Mellanox InfiniBand) */
+        PSCOM_CON_TYPE_SUSPENDED= 0x11, /**< A suspended connection */
+        PSCOM_CON_TYPE_UCP      = 0x12, /**< UCP communication (e.g., for InfiniBand) */
+        PSCOM_CON_TYPE_GW       = 0x13, /**< Communication via a gateway node */
 } pscom_con_type_t;
 
 /**
@@ -116,39 +115,39 @@ typedef enum PSCOM_con_type {
  * errors, i.e., to provide detailed information on the error type.
  */
 typedef enum PSCOM_op {
-	PSCOM_OP_READ = 1,	/**< Read */
-	PSCOM_OP_WRITE = 2,	/**< Write */
-	PSCOM_OP_CONNECT = 3,	/**< Connection setup */
-	PSCOM_OP_RW = 4,	/**< Read or write */
+        PSCOM_OP_READ = 1,      /**< Read */
+        PSCOM_OP_WRITE = 2,     /**< Write */
+        PSCOM_OP_CONNECT = 3,   /**< Connection setup */
+        PSCOM_OP_RW = 4,        /**< Read or write */
 } pscom_op_t;
 
-#define PSCOM_REQ_STATE_SEND_REQUEST		0x00000001 /**< The request refers to a send operation */
-#define PSCOM_REQ_STATE_RECV_REQUEST		0x00000002 /**< The request refers to a receive operation */
-#define PSCOM_REQ_STATE_GRECV_REQUEST		0x00000004 /**< Generated request; matching user-level receive
+#define PSCOM_REQ_STATE_SEND_REQUEST            0x00000001 /**< The request refers to a send operation */
+#define PSCOM_REQ_STATE_RECV_REQUEST            0x00000002 /**< The request refers to a receive operation */
+#define PSCOM_REQ_STATE_GRECV_REQUEST           0x00000004 /**< Generated request; matching user-level receive
                                                                 is missing */
-#define PSCOM_REQ_STATE_POSTED			0x00000008 /**< The request has been appended to the send or receive
+#define PSCOM_REQ_STATE_POSTED                  0x00000008 /**< The request has been appended to the send or receive
                                                                 queue */
-#define PSCOM_REQ_STATE_IO_STARTED		0x00000010 /**< Reading/writing from/to the buffer is ongoing; the
+#define PSCOM_REQ_STATE_IO_STARTED              0x00000010 /**< Reading/writing from/to the buffer is ongoing; the
                                                                 request cannot be cancelled */
-#define PSCOM_REQ_STATE_IO_DONE			0x00000020 /**< Reading/writing from/to the buffer completed */
+#define PSCOM_REQ_STATE_IO_DONE                 0x00000020 /**< Reading/writing from/to the buffer completed */
 
-#define PSCOM_REQ_STATE_ERROR			0x00000040 /**< An error occurred while processing this request */
-#define PSCOM_REQ_STATE_CANCELED		0x00000080 /**< The request has been cancelled by the application */
-#define PSCOM_REQ_STATE_TRUNCATED		0x00000100 /**< The receive buffer is too small for the incoming
+#define PSCOM_REQ_STATE_ERROR                   0x00000040 /**< An error occurred while processing this request */
+#define PSCOM_REQ_STATE_CANCELED                0x00000080 /**< The request has been cancelled by the application */
+#define PSCOM_REQ_STATE_TRUNCATED               0x00000100 /**< The receive buffer is too small for the incoming
                                                                 data */
-#define PSCOM_REQ_STATE_DONE			0x00000200 /**< The request is completed and the io_done()-callback will
+#define PSCOM_REQ_STATE_DONE                    0x00000200 /**< The request is completed and the io_done()-callback will
                                                                 be called */
 
-#define PSCOM_REQ_STATE_RMA_READ_REQUEST	0x00000400 /**< The request refers to an RMA read operation */
-#define PSCOM_REQ_STATE_RMA_WRITE_REQUEST	0x00000800 /**< The request refers to an RMA write operation */
-#define PSCOM_REQ_STATE_PASSIVE_SIDE		0x00001000 /**< The passive side of an RMA write operation */
-#define PSCOM_REQ_STATE_RENDEZVOUS_REQUEST	0x00002000 /**< The data will be sent/received by using the rendezvous
+#define PSCOM_REQ_STATE_RMA_READ_REQUEST        0x00000400 /**< The request refers to an RMA read operation */
+#define PSCOM_REQ_STATE_RMA_WRITE_REQUEST       0x00000800 /**< The request refers to an RMA write operation */
+#define PSCOM_REQ_STATE_PASSIVE_SIDE            0x00001000 /**< The passive side of an RMA write operation */
+#define PSCOM_REQ_STATE_RENDEZVOUS_REQUEST      0x00002000 /**< The data will be sent/received by using the rendezvous
                                                                 protocol */
 
-#define PSCOM_REQ_STATE_GRECV_MERGED		0x00004000 /**< A generated request that was merged with the matching
+#define PSCOM_REQ_STATE_GRECV_MERGED            0x00004000 /**< A generated request that was merged with the matching
                                                                 user request */
 #ifndef __attribute_nonstring__
-#define	__attribute_nonstring__
+#define __attribute_nonstring__
 #endif
 
 typedef unsigned int pscom_req_state_t;
@@ -166,7 +165,7 @@ typedef struct PSCOM_con_info pscom_con_info_t;
  */
 typedef struct PSCOM_xheader_rma_write
 {
-	void		*dest; /**< Destination address on the target node */
+        void            *dest; /**< Destination address on the target node */
 } pscom_xheader_rma_write_t;
 
 
@@ -175,10 +174,10 @@ typedef struct PSCOM_xheader_rma_write
  */
 typedef struct PSCOM_xheader_rma_read
 {
-	void		*id;     /**< Unique ID to match read requests at the
-				      requester */
-	void		*src;    /**< Source address on the target node */
-	uint64_t	src_len; /**< The number of bytes to read from src */
+        void            *id;     /**< Unique ID to match read requests at the
+                                      requester */
+        void            *src;    /**< Source address on the target node */
+        uint64_t        src_len; /**< The number of bytes to read from src */
 } pscom_xheader_rma_read_t;
 
 
@@ -187,7 +186,7 @@ typedef struct PSCOM_xheader_rma_read
  */
 typedef struct PSCOM_xheader_rma_read_answer
 {
-	void *id;
+        void *id;
 } pscom_xheader_rma_read_answer_t;
 
 
@@ -196,7 +195,7 @@ typedef struct PSCOM_xheader_rma_read_answer
  */
 typedef struct PSCOM_xheader_rendezvous_fin
 {
-	void *id;
+        void *id;
 } pscom_xheader_rendezvous_fin_t;
 
 
@@ -205,11 +204,11 @@ typedef struct PSCOM_xheader_rendezvous_fin
  */
 typedef struct PSCOM_xheader_bcast
 {
-	uint32_t	group_id;
-	uint32_t	bcast_root;
-	uint32_t	bcast_arg1; /* internal usage */
-	uint32_t	bcast_arg2; /* internal usage */
-	char		user[0];
+        uint32_t        group_id;
+        uint32_t        bcast_root;
+        uint32_t        bcast_arg1; /* internal usage */
+        uint32_t        bcast_arg2; /* internal usage */
+        char            user[0];
 } pscom_xheader_bcast_t;
 
 
@@ -221,15 +220,15 @@ typedef struct PSCOM_xheader_bcast
  */
 typedef union PSCOM_xheader
 {
-	pscom_xheader_rma_read_t	rma_read;
-	pscom_xheader_rma_read_answer_t	rma_read_answer;
-	pscom_xheader_rma_write_t	rma_write;
-	pscom_xheader_rendezvous_fin_t	ren_fin;
-	pscom_xheader_bcast_t		bcast;
+        pscom_xheader_rma_read_t        rma_read;
+        pscom_xheader_rma_read_answer_t rma_read_answer;
+        pscom_xheader_rma_write_t       rma_write;
+        pscom_xheader_rendezvous_fin_t  ren_fin;
+        pscom_xheader_bcast_t           bcast;
 #ifdef PSCOM_XHEADER_USER_TYPE
-	PSCOM_XHEADER_USER_TYPE		user;
+        PSCOM_XHEADER_USER_TYPE         user;
 #else
-	char				user[0];
+        char                            user[0];
 #endif
 } pscom_xheader_t;
 
@@ -241,11 +240,11 @@ typedef union PSCOM_xheader
  * @brief The network header preceding every pscom message.
  */
 struct PSCOM_header_net {
-	uint16_t	xheader_len;    /**< Length of the extended header */
-	uint8_t		msg_type;       /**< Message type
-					     (cf. @ref pscom_msgtype_t) */
-	uint64_t	data_len : 40;  /**< Message length */
-	pscom_xheader_t	xheader[0];     /**< Zero length xheader */
+        uint16_t        xheader_len;    /**< Length of the extended header */
+        uint8_t         msg_type;       /**< Message type
+                                             (cf. @ref pscom_msgtype_t) */
+        uint64_t        data_len : 40;  /**< Message length */
+        pscom_xheader_t xheader[0];     /**< Zero length xheader */
 };
 
 
@@ -254,65 +253,65 @@ struct PSCOM_header_net {
  */
 struct PSCOM_request
 {
-	pscom_req_state_t state;
+        pscom_req_state_t state;
 
-	size_t		xheader_len;    /**< Length of the extended header */
-	size_t		data_len;       /**< Number of bytes to be
-	                                     sent/received */
-	void		*data;          /**< Destination/source address */
+        size_t          xheader_len;    /**< Length of the extended header */
+        size_t          data_len;       /**< Number of bytes to be
+                                             sent/received */
+        void            *data;          /**< Destination/source address */
 
-	pscom_connection_t *connection; /**< The communication channel to be
-	                                     used (may be NULL in case of
-	                                     "any source" receive request) */
-	pscom_socket_t	*socket;        /**< The @ref pscom_socket_t to be used
-	                                     (relevant for receive requests
-	                                     only, and may be NULL for the "any
-	                                     source on any socket" case) */
+        pscom_connection_t *connection; /**< The communication channel to be
+                                             used (may be NULL in case of
+                                             "any source" receive request) */
+        pscom_socket_t  *socket;        /**< The @ref pscom_socket_t to be used
+                                             (relevant for receive requests
+                                             only, and may be NULL for the "any
+                                             source on any socket" case) */
 
-	struct PSCOM_request_ops {
-		/**
-		 * @brief Callback for matching incoming messages.
-		 *
-		 * @param [in] request    The @ref pscom_request_t to be
-		 *                                 matched.
-		 * @param [in] connection The @ref pscom_connect_t on which the
-		 *                                 header arrived.
-		 * @param [in] header_net The @ref pscom_header_net_t to be
-		 *                                 matched with the request.
-		 *
-		 * @note The recv_accept callback shall return 1 to accept a
-		 *       message.
-		 */
-		int	(*recv_accept)(pscom_request_t *request,
-				       pscom_connection_t *connection,
-				       pscom_header_net_t *header_net);
-		/**
-		 * @brief Completion callback for pscom requests.
-		 *
-		 * This callback routine is invoked when a @ref pscom_request_t
-		 * is marked as done (i.e., PSCOM_REQ_STATE_IO_DONE).
-		 *
-		 * @param [in] request The completed pscom request.
-		 */
-		void	(*io_done)(pscom_request_t *request);
-	} ops;
+        struct PSCOM_request_ops {
+                /**
+                 * @brief Callback for matching incoming messages.
+                 *
+                 * @param [in] request    The @ref pscom_request_t to be
+                 *                                 matched.
+                 * @param [in] connection The @ref pscom_connect_t on which the
+                 *                                 header arrived.
+                 * @param [in] header_net The @ref pscom_header_net_t to be
+                 *                                 matched with the request.
+                 *
+                 * @note The recv_accept callback shall return 1 to accept a
+                 *       message.
+                 */
+                int     (*recv_accept)(pscom_request_t *request,
+                                       pscom_connection_t *connection,
+                                       pscom_header_net_t *header_net);
+                /**
+                 * @brief Completion callback for pscom requests.
+                 *
+                 * This callback routine is invoked when a @ref pscom_request_t
+                 * is marked as done (i.e., PSCOM_REQ_STATE_IO_DONE).
+                 *
+                 * @param [in] request The completed pscom request.
+                 */
+                void    (*io_done)(pscom_request_t *request);
+        } ops;
 
-	size_t			user_size;       /**< User storage size */
-	struct PSCOM_req_user	*user;           /**< User-defined storage in
-	                                              the request structure */
+        size_t                  user_size;       /**< User storage size */
+        struct PSCOM_req_user   *user;           /**< User-defined storage in
+                                                      the request structure */
 
-	size_t			max_xheader_len; /**< Maximum length of the
-	                                              extended header */
+        size_t                  max_xheader_len; /**< Maximum length of the
+                                                      extended header */
 
-	pscom_header_net_t	header;          /**< The network header */
+        pscom_header_net_t      header;          /**< The network header */
 
-	/**
-	 * @brief The extended message header.
-	 *
-	 * @note Storage size of xheader depends on
-	 * sizeof(PSCOM_XHEADER_USER_TYPE)
-	 */
-	pscom_xheader_t		xheader;
+        /**
+         * @brief The extended message header.
+         *
+         * @note Storage size of xheader depends on
+         * sizeof(PSCOM_XHEADER_USER_TYPE)
+         */
+        pscom_xheader_t         xheader;
 };
 
 
@@ -321,16 +320,16 @@ struct PSCOM_request
  */
 struct PSCOM_con_info
 {
-	int	node_id; /**< A unique node identifier */
-	int	pid;     /**< Process ID of the connection owning process */
-	void	*id;     /**< A unique 32bit identifier for the connection */
-	/**
-	 * @brief Name of the corresponding socket.
-	 *
-	 * @note Be aware: name is not null-terminated! A printf format that
-	 *       fits is: printf("%.8s", con_info->name);
-	 */
-	char	name[8]  __attribute_nonstring__ ;
+        int     node_id; /**< A unique node identifier */
+        int     pid;     /**< Process ID of the connection owning process */
+        void    *id;     /**< A unique 32bit identifier for the connection */
+        /**
+         * @brief Name of the corresponding socket.
+         *
+         * @note Be aware: name is not null-terminated! A printf format that
+         *       fits is: printf("%.8s", con_info->name);
+         */
+        char    name[8]  __attribute_nonstring__ ;
 
 };
 
@@ -340,54 +339,54 @@ struct PSCOM_con_info
  */
 struct PSCOM_socket
 {
-	struct PSCOM_socket_ops {
-		/**
-		 * @brief Callback for accepting a connection request.
-		 *
-		 * @param [in] new_connection The connection handle
-		 */
-		void	(*con_accept)(pscom_connection_t *new_connection);
+        struct PSCOM_socket_ops {
+                /**
+                 * @brief Callback for accepting a connection request.
+                 *
+                 * @param [in] new_connection The connection handle
+                 */
+                void    (*con_accept)(pscom_connection_t *new_connection);
 
-		/**
-		 * @brief Callback that is invoked upon any connection error.
-		 *
-		 * @param [in] connection The erroneous connection.
-		 * @param [in] operation  The @ref pscom_op_t causing the error.
-		 * @param [in] error      An error code precising the cause.
-		 */
-		void	(*con_error)(pscom_connection_t *connection,
-				     pscom_op_t operation,
-				     pscom_err_t error);
+                /**
+                 * @brief Callback that is invoked upon any connection error.
+                 *
+                 * @param [in] connection The erroneous connection.
+                 * @param [in] operation  The @ref pscom_op_t causing the error.
+                 * @param [in] error      An error code precising the cause.
+                 */
+                void    (*con_error)(pscom_connection_t *connection,
+                                     pscom_op_t operation,
+                                     pscom_err_t error);
 
-		/**
-		 * @brief Default callback for message matching.
-		 *
-		 * This callback is invoked whenever a user message (i.e.,
-		 * PSCOM_MSGTYPE_USER) arrives on any connection of this socket.
-		 *
-		 * @param [in] connection The connection where the msg arrived.
-		 * @param [in] header_net The header of the message.
-		 */
-		pscom_request_t *(*default_recv)(pscom_connection_t *connection,
-						 pscom_header_net_t *header_net);
-	} ops;
-	int		listen_portno; /* portno or -1 */
+                /**
+                 * @brief Default callback for message matching.
+                 *
+                 * This callback is invoked whenever a user message (i.e.,
+                 * PSCOM_MSGTYPE_USER) arrives on any connection of this socket.
+                 *
+                 * @param [in] connection The connection where the msg arrived.
+                 * @param [in] header_net The header of the message.
+                 */
+                pscom_request_t *(*default_recv)(pscom_connection_t *connection,
+                                                 pscom_header_net_t *header_net);
+        } ops;
+        int             listen_portno; /* portno or -1 */
 
-	pscom_con_info_t local_con_info;          /**< Node-local connection
-	                                               information */
-	size_t		connection_userdata_size; /**< Size of the user-defined
-	                                               local storage within the
-						       connection structure. */
-	size_t		userdata_size;            /**< Size of the user-defined
-	                                               local storage within the
-						       socket structure. */
-	/**
-	 * @brief User-defined storage.
-	 */
+        pscom_con_info_t local_con_info;          /**< Node-local connection
+                                                       information */
+        size_t          connection_userdata_size; /**< Size of the user-defined
+                                                       local storage within the
+                                                       connection structure. */
+        size_t          userdata_size;            /**< Size of the user-defined
+                                                       local storage within the
+                                                       socket structure. */
+        /**
+         * @brief User-defined storage.
+         */
 #ifdef PSCOM_SOCKET_USERDATA_TYPE
-	PSCOM_SOCKET_USERDATA_TYPE userdata;
+        PSCOM_SOCKET_USERDATA_TYPE userdata;
 #else
-	char		userdata[0];
+        char            userdata[0];
 #endif
 };
 
@@ -397,26 +396,26 @@ struct PSCOM_socket
  */
 struct PSCOM_connection
 {
-	pscom_socket_t	*socket; /**< The socket this connection belongs to. */
-	pscom_con_state_t state; /**< The connection state. */
-	pscom_con_type_t type;   /**< The connection type (i.e., corresponding
-	                              to the respective plugin, an on-demand
-				      connection, or a precon) */
+        pscom_socket_t  *socket; /**< The socket this connection belongs to. */
+        pscom_con_state_t state; /**< The connection state. */
+        pscom_con_type_t type;   /**< The connection type (i.e., corresponding
+                                      to the respective plugin, an on-demand
+                                      connection, or a precon) */
 
-	pscom_con_info_t remote_con_info; /**< Connection information of the
-	                                       connected peer process. */
+        pscom_con_info_t remote_con_info; /**< Connection information of the
+                                               connected peer process. */
 
-	size_t		userdata_size;    /**< Size of the user-defined storage
-	                                       within the connection
-					       structure. */
+        size_t          userdata_size;    /**< Size of the user-defined storage
+                                               within the connection
+                                               structure. */
 
-	/**
-	 * @brief User-defined storage.
-	 */
+        /**
+         * @brief User-defined storage.
+         */
 #ifdef PSCOM_CONNECTION_USERDATA_TYPE
-	PSCOM_CONNECTION_USERDATA_TYPE userdata;
+        PSCOM_CONNECTION_USERDATA_TYPE userdata;
 #else
-	char		userdata[0];
+        char            userdata[0];
 #endif
 };
 
@@ -478,12 +477,12 @@ int pscom_get_portno(pscom_socket_t *socket);
  * @return A pointer to the socket or NULL on error.
  */
 pscom_socket_t *pscom_open_socket(size_t socket_userdata_size,
-				  size_t connection_userdata_size);
+                                  size_t connection_userdata_size);
 
 
-#define PSCOM_OPEN_SOCKET()						\
-	pscom_open_socket(sizeof(PSCOM_SOCKET_USERDATA_TYPE),		\
-			  sizeof(PSCOM_CONNECTION_USERDATA_TYPE))
+#define PSCOM_OPEN_SOCKET()                                             \
+        pscom_open_socket(sizeof(PSCOM_SOCKET_USERDATA_TYPE),           \
+                          sizeof(PSCOM_CONNECTION_USERDATA_TYPE))
 
 
 /**
@@ -513,9 +512,9 @@ void pscom_socket_set_name(pscom_socket_t *socket, const char *name);
  */
 pscom_err_t pscom_listen(pscom_socket_t *socket, int portno);
 #define PSCOM_ANYPORT -1   /**< When used as a port-number, stands for any
-			        port (wildcard). */
+                                port (wildcard). */
 #define PSCOM_LISTEN_FD0 0 /**< When used as a port-number, listen on socket at
-			        fd=0. */
+                                fd=0. */
 
 
 /**
@@ -615,7 +614,7 @@ pscom_err_t pscom_connect(pscom_connection_t *connection, int nodeid, int portno
  * @return Always returns PSCOM_SUCCESS.
  */
 pscom_err_t pscom_connect_ondemand(pscom_connection_t *connection,
-				   int nodeid, int portno, const char name[8]);
+                                   int nodeid, int portno, const char name[8]);
 
 
 /**
@@ -635,9 +634,9 @@ pscom_err_t pscom_connect_ondemand(pscom_connection_t *connection,
 pscom_request_t *pscom_request_create(size_t max_xheader_len, size_t user_size);
 
 
-#define PSCOM_REQUEST_CREATE()						\
-	pscom_request_create(sizeof(PSCOM_XHEADER_USER_TYPE),		\
-			     sizeof(struct PSCOM_req_user))
+#define PSCOM_REQUEST_CREATE()                                          \
+        pscom_request_create(sizeof(PSCOM_XHEADER_USER_TYPE),           \
+                             sizeof(struct PSCOM_req_user))
 
 
 /**
@@ -696,18 +695,18 @@ void pscom_post_send(pscom_request_t *request);
 
 static inline
 pscom_request_t *pscom_req_prepare(pscom_request_t *req,
-				   pscom_connection_t *connection,
-				   void *data, size_t data_len,
-				   void *xheader, size_t xheader_len)
+                                   pscom_connection_t *connection,
+                                   void *data, size_t data_len,
+                                   void *xheader, size_t xheader_len)
 {
-	req->connection = connection;
-	req->data = data; req->data_len = data_len;
-	req->xheader_len = xheader_len;
-	if (xheader) {
-		assert(xheader_len <= req->max_xheader_len);
-		memcpy(&req->xheader.user, xheader, xheader_len);
-	}
-	return req;
+        req->connection = connection;
+        req->data = data; req->data_len = data_len;
+        req->xheader_len = xheader_len;
+        if (xheader) {
+                assert(xheader_len <= req->max_xheader_len);
+                memcpy(&req->xheader.user, xheader, xheader_len);
+        }
+        return req;
 }
 
 
@@ -726,8 +725,8 @@ pscom_request_t *pscom_req_prepare(pscom_request_t *req,
  * @param [in] data_len    The amount of data to be sent in byte.
  */
 void pscom_send(pscom_connection_t *connection,
-		void *xheader, size_t xheader_len,
-		void *data, size_t data_len);
+                void *xheader, size_t xheader_len,
+                void *data, size_t data_len);
 
 
 /**
@@ -746,10 +745,10 @@ void pscom_send(pscom_connection_t *connection,
  *                         the data buffer.
  */
 void pscom_send_inplace(pscom_connection_t *connection,
-			void *xheader, size_t xheader_len,
-			void *data, size_t data_len,
-			void (*io_done)(pscom_req_state_t state, void *priv),
-			void *priv);
+                        void *xheader, size_t xheader_len,
+                        void *data, size_t data_len,
+                        void (*io_done)(pscom_req_state_t state, void *priv),
+                        void *priv);
 
 
 /**
@@ -775,8 +774,8 @@ void pscom_send_inplace(pscom_connection_t *connection,
  *                            type of error.
  */
 pscom_err_t pscom_recv(pscom_connection_t *connection, pscom_socket_t *socket,
-		       void *xheader, size_t xheader_len,
-		       void *data, size_t data_len);
+                       void *xheader, size_t xheader_len,
+                       void *data, size_t data_len);
 
 
 /**
@@ -801,12 +800,12 @@ pscom_err_t pscom_recv(pscom_connection_t *connection, pscom_socket_t *socket,
  */
 static inline
 pscom_err_t pscom_recv_from(pscom_connection_t *connection,
-			    void *xheader, size_t xheader_len,
-			    void *data, size_t data_len)
+                            void *xheader, size_t xheader_len,
+                            void *data, size_t data_len)
 {
-	return pscom_recv(connection, connection->socket,
-			  xheader, xheader_len,
-			  data, data_len);
+        return pscom_recv(connection, connection->socket,
+                          xheader, xheader_len,
+                          data, data_len);
 }
 
 
@@ -833,12 +832,12 @@ pscom_err_t pscom_recv_from(pscom_connection_t *connection,
  */
 static inline
 pscom_err_t pscom_recv_any(pscom_socket_t *socket,
-			   void *xheader, size_t xheader_len,
-			   void *data, size_t data_len)
+                           void *xheader, size_t xheader_len,
+                           void *data, size_t data_len)
 {
-	return pscom_recv(NULL, socket,
-			  xheader, xheader_len,
-			  data, data_len);
+        return pscom_recv(NULL, socket,
+                          xheader, xheader_len,
+                          data, data_len);
 }
 
 
@@ -1023,33 +1022,33 @@ void pscom_probe(pscom_request_t *request);
 static inline
 int pscom_req_state_successful(pscom_req_state_t state)
 {
-	return (state &
-		(PSCOM_REQ_STATE_ERROR |
-		 PSCOM_REQ_STATE_CANCELED |
-		 PSCOM_REQ_STATE_TRUNCATED |
-		 PSCOM_REQ_STATE_DONE)) ==
-		(PSCOM_REQ_STATE_DONE);
+        return (state &
+                (PSCOM_REQ_STATE_ERROR |
+                 PSCOM_REQ_STATE_CANCELED |
+                 PSCOM_REQ_STATE_TRUNCATED |
+                 PSCOM_REQ_STATE_DONE)) ==
+                (PSCOM_REQ_STATE_DONE);
 }
 
 
 static inline
 int pscom_req_successful(pscom_request_t *req)
 {
-	return pscom_req_state_successful(req->state);
+        return pscom_req_state_successful(req->state);
 }
 
 
 static inline
 int pscom_req_state_is_done(pscom_req_state_t state)
 {
-	return state & PSCOM_REQ_STATE_DONE;
+        return state & PSCOM_REQ_STATE_DONE;
 }
 
 
 static inline
 int pscom_req_is_done(pscom_request_t *req)
 {
-	return pscom_req_state_is_done(req->state);
+        return pscom_req_state_is_done(req->state);
 }
 
 
@@ -1082,7 +1081,7 @@ int pscom_is_gpu_mem(const void* ptr);
 static inline
 void pscom_memcpy(void* dst, const void* src, size_t len)
 {
-	memcpy(dst, src, len);
+        memcpy(dst, src, len);
 }
 #endif
 
@@ -1103,8 +1102,8 @@ typedef struct PSCOM_group pscom_group_t;
 
 
 pscom_group_t *pscom_group_open(pscom_socket_t *socket,
-				uint32_t group_id, uint32_t my_grank,
-				uint32_t group_size, pscom_connection_t **connections);
+                                uint32_t group_id, uint32_t my_grank,
+                                uint32_t group_size, pscom_connection_t **connections);
 
 
 void pscom_group_close(pscom_group_t *group);
@@ -1116,10 +1115,10 @@ void pscom_group_close(pscom_group_t *group);
    req->xheader.bcast.group_id of socket req->socket.
    receive if req->xheader.bcast.group_src != group->my_rank, else send.
 
-   req->xheader_len		: user len + sizeof(xheader.bcast)!
+   req->xheader_len             : user len + sizeof(xheader.bcast)!
    req->xheader.bcast.group_id
    req->xheader.bcast.bcast_root
-   req->xheader.bcast.user	: user data behind req->xheader.bcast
+   req->xheader.bcast.user      : user data behind req->xheader.bcast
    req->data_len
    req->data
    req->socket
@@ -1133,8 +1132,8 @@ void pscom_post_bcast(pscom_request_t *request);
 
 /* Blocking version of bcast */
 void pscom_bcast(pscom_group_t *group, unsigned bcast_root,
-		 void *xheader, size_t xheader_len,
-		 void *data, size_t data_len);
+                 void *xheader, size_t xheader_len,
+                 void *data, size_t data_len);
 
 
 /* communication barrier in group group. */
@@ -1178,7 +1177,7 @@ void pscom_con_type_mask_all(pscom_socket_t *socket);
  * @param [in] con_type The connection type to be enabled.
  */
 void pscom_con_type_mask_only(pscom_socket_t *socket,
-			      pscom_con_type_t con_type);
+                              pscom_con_type_t con_type);
 
 
 /**
@@ -1217,7 +1216,7 @@ void pscom_con_type_mask_del(pscom_socket_t *socket, pscom_con_type_t con_type);
  * @return 1 if @a con_type is enabled; 0 otherwise.
  */
 int pscom_con_type_mask_is_set(pscom_socket_t *socket,
-			       pscom_con_type_t con_type);
+                               pscom_con_type_t con_type);
 
 
 /**
@@ -1248,7 +1247,7 @@ void *pscom_con_type_mask_backup(pscom_socket_t *socket);
  * @param [in] con_type_mask_backup The list to be restored.
  */
 void pscom_con_type_mask_restore(pscom_socket_t *socket,
-				 void *con_type_mask_backup);
+                                 void *con_type_mask_backup);
 
 
 /**
@@ -1267,7 +1266,7 @@ void pscom_con_type_mask_restore(pscom_socket_t *socket,
  *         otherwise.
  */
 pscom_connection_t *pscom_get_next_connection(pscom_socket_t *socket,
-					      pscom_connection_t *con);
+                                              pscom_connection_t *con);
 
 
 /**
@@ -1285,7 +1284,7 @@ pscom_connection_t *pscom_get_next_connection(pscom_socket_t *socket,
  *         the error type).
  */
 pscom_err_t pscom_connect_socket_str(pscom_connection_t *connection,
-				     const char *socket_str);
+                                     const char *socket_str);
 
 
 /**
@@ -1379,7 +1378,7 @@ const char *pscom_con_info_str(pscom_con_info_t *con_info);
  * @return Pointer to a buffer containing the NULL-terminated string.
  */
 const char *pscom_con_info_str2(pscom_con_info_t *con_info1,
-				pscom_con_info_t *con_info2);
+                                pscom_con_info_t *con_info2);
 
 
 /**
@@ -1440,8 +1439,8 @@ ssize_t pscom_writeall(int fd, const void *buf, size_t count);
 int pscom_atoport(const char *service, const char *proto);
 int pscom_atoaddr(const char *address, struct in_addr *addr);
 int pscom_ascii_to_sockaddr_in(const char *host, const char *port,
-			       const char *protocol,
-			       struct sockaddr_in *addr);
+                               const char *protocol,
+                               struct sockaddr_in *addr);
 
 const char *pscom_dumpstr(const void *buf, size_t size);
 
